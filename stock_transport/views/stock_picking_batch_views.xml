@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<odoo>
+   <record id="stock_picking_batch_tree_view_inherited" model="ir.ui.view">
+       <field name="name">stock.picking.batch.form.view</field>
+       <field name="model">stock.picking.batch</field>
+       <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form" />
+       <field name="arch" type="xml">
+           <xpath expr="//field[@name='scheduled_date']" position="after">
+                   <field name="dock_id" />
+                   <field name="vehicle_id" />
+                   <field name="category_id" />
+                   <field name = "weight_percentage" widget = "progressbar"/>
+                   <field name = "volume_percentage" widget = "progressbar"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="stock_picking_batch.stock_picking_batch_action" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,graph,gantt</field>
+        <field name="context">{'search_default_draft': True, 'search_default_in_progress': True, 'graph_mode': 'bar', 'graph_groupbys': ['scheduled_date','category_id'],}</field>
+    </record> 
+    <record id="stock_picking_batch_gantt_view" model="ir.ui.view">
+        <field name="name">view.stock.picking.batch.gantt</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <gantt
+            date_start="create_date"
+            date_stop="scheduled_date"
+            default_group_by="dock_id"
+            >
+                <field name="load_weight"/>
+                <field name="load_volume"/>
+            </gantt>
+        </field>
+    </record>
+</odoo>
