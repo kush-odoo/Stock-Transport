@@ -24,8 +24,6 @@ Main Features
 * Analysis graph for costs
 """,
     'depends': [
-        'base',
-        'mail',
         'fleet',
         'stock_picking_batch',
     ],
@@ -35,6 +33,6 @@ Main Features
         "views/stock_picking_batch_views.xml",
     ],
     'installable': True,
-    'application': True,
+    'application': False,
     'license': 'LGPL-3',
 }

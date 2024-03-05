@@ -1,5 +1,19 @@
 <?xml version="1.0"?>
 <odoo>
+    <record id="stock_picking_batch.stock_picking_batch_action" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,graph,gantt</field>
+        <field name="context">{'search_default_draft': True, 'search_default_in_progress':True, 'graph_mode': 'bar', 'graph_groupbys': ['scheduled_date','category_id'],}</field>
+    </record>
+    <record id="stock_picking_tree_view_inherited" model="ir.ui.view">
+        <field name="name">stock.picking.tree.view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='scheduled_date']" position="after">
+                <field name="volume"/>
+                </xpath>
+        </field>
+    </record>
    <record id="stock_picking_batch_tree_view_inherited" model="ir.ui.view">
        <field name="name">stock.picking.batch.form.view</field>
        <field name="model">stock.picking.batch</field>
@@ -9,27 +23,61 @@
                    <field name="dock_id" />
                    <field name="vehicle_id" />
                    <field name="category_id" />
+                   <div>
+                    <div class="d-flex justify-content-between" style="width:1rem">
+                        <p style="margin-right: 7rem">Weight</p>
+                        <div class="d-flex ms-5">
+                            <field name="load_weight" invisible="not category_id" string="Weight" class="me-2 ms-5"/>
+                            <field name="weight_percentage" invisible="not category_id" string="" widget="progressbar"/>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between" style="width:15rem">
+                        <p style="margin-right: 7rem">Volume</p>
+                        <div class="d-flex ms-5">
+                            <field name="load_volume" invisible="not category_id" string="Volume" class="me-2 ms-5"/>
+                            <field name="volume_percentage" invisible="not category_id" string="" widget="progressbar"/>
+                        </div>
+                    </div>
+                </div>
+                   <!-- <field name="driver_id" widget= "many2one_avatar"/>
                    <field name = "weight_percentage" widget = "progressbar"/>
-                   <field name = "volume_percentage" widget = "progressbar"/>
+                   <field name = "volume_percentage" widget = "progressbar"/> -->
             </xpath>
         </field>
     </record>
-    <record id="stock_picking_batch.stock_picking_batch_action" model="ir.actions.act_window">
-        <field name="view_mode">tree,kanban,form,graph,gantt</field>
-        <field name="context">{'search_default_draft': True, 'search_default_in_progress': True, 'graph_mode': 'bar', 'graph_groupbys': ['scheduled_date','category_id'],}</field>
-    </record> 
+    <record id="stock_picking_batch_graph_view" model="ir.ui.view">
+        <field name="name">stock.picking.batch.graph.view</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <graph string="Batch Transfers" >
+                <field name="load_weight" string="Weight"/>
+                <field name="load_volume" string="Volume"/>
+                <field name="transfer_count" />
+                <field name="line_count" />
+                <field name="max_category_weight" invisible="1"/>
+                <field name="max_category_volume" invisible="1"/>
+                <field name="weight_percentage" invisible="1"/>
+                <field name="volume_percentage" invisible="1"/>
+            </graph>
+        </field>
+    </record>
     <record id="stock_picking_batch_gantt_view" model="ir.ui.view">
-        <field name="name">view.stock.picking.batch.gantt</field>
+        <field name="name">stock.picking.batch.gantt.view</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
             <gantt
-            date_start="create_date"
-            date_stop="scheduled_date"
-            default_group_by="dock_id"
+            date_start = "create_date"
+            date_stop = "scheduled_date"
+            default_group_by = "dock_id,vehicle_id"
+            decoration-info = "state =='draft'"
+            color = "vehicle_id"
+            thumbnails="{'vehicle_id': 'image_128'}"
             >
                 <field name="load_weight"/>
+                <field name="state"/>
                 <field name="load_volume"/>
+                <field name="driver_id"/>
             </gantt>
         </field>
-    </record>
+    </record> 
 </odoo>

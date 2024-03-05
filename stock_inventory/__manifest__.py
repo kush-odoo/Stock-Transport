@@ -9,5 +9,7 @@
         'views/res_config_settings_views.xml',
     ],
     'installable' : True,
-    'application' : True,
+    'application' : False,
+    'license': 'LGPL-3',
+    'auto_install': True,
 }
